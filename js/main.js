@@ -256,11 +256,11 @@
     var prev = cur ? pages[cur] : null;
     cur = id;
     setNav(id);
-    if (push) history.pushState({ p: id }, '', '#' + id);
+    if (push) { try { history.pushState({ p: id }, '', '#' + id); } catch (e) { try { location.hash = id; } catch (x) {} } }
     document.title = titles[id] + 'Muhammad Rayyan Nafis – Portofolio';
     clearTimeout(timer);
     if (!prev || reduce) { show(pages[id]); return; }
-    warp = 1;
+    warp = 1.3;
     prev.classList.add('out');
     timer = setTimeout(function () { show(pages[id]); }, 360);
   }
@@ -272,7 +272,9 @@
       go(id, true);
     });
   });
-  addEventListener('popstate', function () { go((location.hash || '#home').slice(1), false); });
+  function dariHash() { go((location.hash || '#home').slice(1), false); }
+  addEventListener('popstate', dariHash);
+  addEventListener('hashchange', dariHash);
 
   /* ============ LOADER ============ */
   var loader = document.getElementById('loader');
@@ -299,7 +301,7 @@
   })();
 
   /* ============ TILT 3D (hanya mouse, bukan layar sentuh / perangkat ringan) ============ */
-  if (!reduce && !lite) {
+  if (!reduce && !coarse) {
     [].slice.call(document.querySelectorAll('.tilt')).forEach(function (el) {
       var m = +el.getAttribute('data-tilt') || 8, raf = 0, ex = 0, ey = 0;
       function apply() {
@@ -383,6 +385,15 @@
   bu.addEventListener('click', mulai);
   inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') tebak(); });
   mulai();
+
+  /* ============ FOTO: kalau gagal dimuat, tampilkan avatar "RN" ============ */
+  var foto = document.getElementById('fotoProfil');
+  if (foto) {
+    var FB = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 453"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14224f"/><stop offset="1" stop-color="#0a1233"/></linearGradient></defs><rect width="340" height="453" fill="url(#g)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="120" fill="#4d8bff">RN</text></svg>');
+    var pakaiFB = function () { if (foto.dataset.fb) return; foto.dataset.fb = '1'; foto.src = FB; };
+    foto.addEventListener('error', pakaiFB);
+    if (foto.complete && !foto.naturalWidth) pakaiFB();
+  }
 
   document.getElementById('thn').textContent = new Date().getFullYear();
 })();

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="css/style.css">
-<noscript><link rel="stylesheet" href="css/style.css"></noscript>
+<noscript><style>.page[hidden]{display:flex!important}</style></noscript>
 </head>
 <body>
 <div id="loader" role="status" aria-live="polite"><div class="ld"><b><span id="pct">0</span><small>%</small></b><div class="bar"><i id="barFill"></i></div><p>Memuat aset...</p></div></div>
@@ -40,7 +40,14 @@
           <a class="btn solid" href="#portofolio">Lihat Proyek →</a>
         </div>
         <div class="photo rv tilt" data-tilt="10">
-          <img id="fotoProfil" src="https://plain-apac-prod-public.komododecks.com/202611/12/kG9Y9CmM3rhYEjdGVVlZ/image.jpg" width="340" height="453" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'" alt="Foto Muhammad Rayyan Nafis memakai seragam sekolah">
+          <!-- =====================================================
+             CARA GANTI FOTO
+             Ganti isi src="..." di bawah ini dengan salah satu:
+             1) Link langsung gambar, contoh: https://i.imgur.com/AbCdEf1.jpg
+             2) Nama file foto di folder ini, contoh: img/foto-profil.jpg
+             (Link halaman/album tidak bisa, harus link langsung ke file gambar)
+             ===================================================== -->
+          <img id="fotoProfil" src="img/foto-profil.jpg" width="340" height="453" referrerpolicy="no-referrer" alt="Foto Muhammad Rayyan Nafis memakai seragam sekolah">
         </div>
         <div class="rv">
           <p>Saya pelajar jurusan <b>PPLG / RPL</b> di SMK 1 Bangkinang. Saya berminat pada pengembangan perangkat lunak dan gim, dengan fokus belajar pemrograman, pembuatan website, serta dasar pengembangan game.</p>
