@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portofolio Muhammad Rayyan Nafis, pelajar PPLG/RPL SMK 1 Bangkinang.">
+<meta name="theme-color" content="#02030a">
+<title>Muhammad Rayyan Nafis – Portofolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<noscript><link rel="stylesheet" href="css/style.css"></noscript>
+</head>
+<body>
+<div id="loader" role="status" aria-live="polite"><div class="ld"><b><span id="pct">0</span><small>%</small></b><div class="bar"><i id="barFill"></i></div><p>Memuat aset...</p></div></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<nav class="pill" aria-label="Navigasi utama">
+  <span id="navInd" aria-hidden="true"></span><a href="#home" class="on">Home</a><a href="#tentang">Tentang</a><a href="#portofolio">Portofolio</a>
+</nav>
+
+<main>
+  <section id="home" class="page" hidden>
+    <div class="wrap hero">
+      <div>
+      <p class="sub rv">Pelajar PPLG / RPL · SMK 1 Bangkinang</p>
+      <h1 class="rv"><span class="grad">Halo, saya</span><br>Muhammad Rayyan Nafis</h1>
+      <p class="lede rv">Saya suka membangun website, bereksperimen dengan game, dan merancang ide digital yang bermanfaat. Belajar, membangun, lalu membagikan.</p>
+      <div class="actions rv"><a class="btn solid" href="#portofolio">Lihat Proyek →</a><a class="btn" href="#tentang">Tentang Saya</a></div>
+      </div>
+      <canvas id="obj" class="rv" aria-label="Objek 3D berputar, ikuti gerakan kursor" role="img"></canvas>
+    </div>
+  </section>
+
+  <section id="tentang" class="page" hidden>
+    <div class="wrap">
+      <div class="about">
+        <div class="rv">
+          <h2 class="hi"><span class="grad">Hi, I'm</span><span>Muhammad Rayyan Nafis</span></h2>
+          <a class="btn solid" href="#portofolio">Lihat Proyek →</a>
+        </div>
+        <div class="photo rv tilt" data-tilt="10">
+          <img id="fotoProfil" src="https://plain-apac-prod-public.komododecks.com/202611/12/kG9Y9CmM3rhYEjdGVVlZ/image.jpg" width="340" height="453" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'" alt="Foto Muhammad Rayyan Nafis memakai seragam sekolah">
+        </div>
+        <div class="rv">
+          <p>Saya pelajar jurusan <b>PPLG / RPL</b> di SMK 1 Bangkinang. Saya berminat pada pengembangan perangkat lunak dan gim, dengan fokus belajar pemrograman, pembuatan website, serta dasar pengembangan game.</p>
+          <p>Saya senang mengubah ide menjadi proyek kecil yang bisa dicoba langsung. Mulai dari halaman web sederhana, eksperimen game, sampai alat bantu yang menyelesaikan masalah sehari-hari.</p>
+          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Supabase</li><li>SQL</li><li>Java</li><li>Dasar Game Dev</li><li>Problem Solving</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="portofolio" class="page" hidden>
+    <div class="wrap">
+      <div class="head rv"><h2>Portofolio</h2><p>Proyek, perjalanan pendidikan, dan sedikit hiburan.</p></div>
+      <div class="tabs rv" role="tablist" aria-label="Isi portofolio">
+        <button class="tab" role="tab" id="t-proyek" aria-controls="p-proyek" aria-selected="true">Proyek</button>
+        <button class="tab" role="tab" id="t-edu" aria-controls="p-edu" aria-selected="false" tabindex="-1">Pendidikan</button>
+        <button class="tab" role="tab" id="t-game" aria-controls="p-game" aria-selected="false" tabindex="-1">Game</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-proyek" aria-labelledby="t-proyek">
+        <div class="grid">
+          <article class="card tilt" data-tilt="8"><p class="tag">Game web · Konsep</p><h3>PetVerse</h3><p>Game koleksi pet dengan telur, tingkat kelangkaan, dan database online bersama.</p><ul><li>Telur dan tingkat kelangkaan (rarity)</li><li>Koleksi dan upgrade pet</li><li>Tanaman yang dijual di toko</li></ul><span class="tech">HTML · JavaScript · SQL</span></article>
+          <article class="card tilt" data-tilt="8"><p class="tag">Website · Eksperimen</p><h3>NusaMod</h3><p>Website add-on dengan profil, misi harian, redeem code, dan akun premium.</p><ul><li>Profil pengguna dan misi harian</li><li>Redeem code</li><li>Add-on premium dan centang biru</li></ul><span class="tech">HTML · JavaScript · Supabase</span></article>
+          <article class="card tilt" data-tilt="8"><p class="tag">Plugin · Belajar</p><h3>ChatGuard</h3><p>Plugin Paper yang membisukan kata kasar dan menghukum spam di chat.</p><ul><li>Mute 5 menit untuk kata kasar</li><li>Ban 3 jam untuk spam chat</li><li>Berjalan di Paper 1.21.11</li></ul><span class="tech">Java · Paper API</span></article>
+          <article class="card tilt" data-tilt="8"><p class="tag">Web app · Ide</p><h3>StudyFlow</h3><p>Alat bantu belajar berupa timer, daftar tugas, dan catatan ringan.</p><ul><li>Timer fokus</li><li>Daftar tugas</li><li>Catatan ringan</li></ul><span class="tech">HTML · CSS · JavaScript</span></article>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-edu" aria-labelledby="t-edu" hidden>
+        <ol class="edu">
+          <li><span class="k">TK</span><b>Tali Kasih Sayang</b></li>
+          <li><span class="k">SD</span><b>SDN 006 Jl. Sisingamangaraja</b></li>
+          <li><span class="k">SMP</span><b>SMP 1 Bangkinang Kota</b></li>
+          <li><span class="k">SMK</span><b>SMK 1 Bangkinang · PPLG / RPL</b><em>sekarang</em></li>
+        </ol>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-game" aria-labelledby="t-game" hidden>
+        <div class="game">
+          <p style="margin:0 0 16px;color:var(--muted)">Aku memilih angka dari 1 sampai 10. Kamu punya 4 kesempatan untuk menebaknya.</p>
+          <p class="info"><span id="nyawa" aria-label="Sisa kesempatan">♥♥♥♥</span><span id="rekor">Rekor: belum ada</span></p>
+          <div class="go">
+            <input id="tebakan" type="number" inputmode="numeric" min="1" max="10" placeholder="1–10" aria-label="Tebakan kamu">
+            <button class="btn solid" id="btnTebak" type="button">Tebak</button>
+            <button class="btn" id="btnUlang" type="button">Main lagi</button>
+          </div>
+          <p id="pesanGame" role="status" aria-live="polite">Ketik angka lalu tekan Tebak.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© <span id="thn"></span> Muhammad Rayyan Nafis <a href="#home">Kembali ke Home ↑</a></footer>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
