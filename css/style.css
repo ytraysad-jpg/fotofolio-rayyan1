@@ -118,3 +118,94 @@ footer a{color:var(--b);text-decoration:none;margin-left:10px}
 .js .rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 .js .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.panel{animation:none}*{transition-duration:.01ms!important}}
+
+/* =====================================================
+   LIQUID GLASS · semua tombol (.btn, .tab, nav, tombol suara)
+   ===================================================== */
+.btn,.tab{
+  position:relative;isolation:isolate;overflow:hidden;
+  border-radius:999px;color:var(--ink);
+  background:
+    radial-gradient(120% 140% at 15% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 55%),
+    linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 50%,rgba(140,180,255,.10));
+  border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(255,255,255,.08),inset 0 -12px 20px rgba(110,160,255,.12),0 8px 22px rgba(0,0,0,.35);
+  text-shadow:0 1px 8px rgba(0,0,0,.35);
+  transition:transform .45s cubic-bezier(.34,1.7,.5,1),box-shadow .3s,background .3s,border-color .3s,color .2s;
+}
+/* pantulan cahaya melengkung di bagian atas */
+.btn::before,.tab::before{content:"";position:absolute;left:7%;right:7%;top:2px;height:46%;border-radius:999px 999px 60% 60%/100% 100% 40% 40%;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.02));opacity:.8;z-index:-1;pointer-events:none}
+/* kilau yang menyapu saat disorot */
+.btn::after,.tab::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-130%);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.btn:hover::after,.tab:hover::after{transform:translateX(130%)}
+.btn:hover,.tab:hover{transform:translateY(-2px) scale(1.03);border-color:rgba(255,255,255,.42);color:#fff}
+/* ditekan: gepeng seperti cairan, lalu memantul balik */
+.btn:active,.tab:active{transform:scale(.93,.87);transition-duration:.08s;box-shadow:inset 0 3px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.4),0 3px 10px rgba(0,0,0,.3)}
+.btn:disabled,.btn:disabled:hover,.btn:disabled:active{opacity:.45;transform:none;cursor:not-allowed}
+
+.btn.solid,.tab[aria-selected="true"]{
+  color:#fff;border-color:rgba(190,215,255,.65);
+  background:
+    radial-gradient(120% 140% at 15% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 55%),
+    linear-gradient(160deg,rgba(120,175,255,.75),rgba(47,107,255,.5));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -14px 22px rgba(20,60,200,.35),0 10px 30px rgba(47,107,255,.5),0 0 0 1px rgba(47,107,255,.25);
+}
+.btn.solid:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -14px 22px rgba(20,60,200,.35),0 14px 38px rgba(47,107,255,.65),0 0 0 1px rgba(47,107,255,.3)}
+.btn.solid:active,.tab[aria-selected="true"]:active{box-shadow:inset 0 3px 14px rgba(10,40,160,.5),inset 0 1px 0 rgba(255,255,255,.5),0 3px 12px rgba(47,107,255,.4)}
+
+.btn svg{width:17px;height:17px;flex:none;fill:currentColor}
+.btn.sm{min-height:40px;padding:8px 16px;font-size:.86rem}
+.btn.pending{opacity:.78}
+
+/* riak cairan di titik sentuh */
+.rip{position:absolute;z-index:0;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.6),rgba(255,255,255,.18) 45%,transparent 70%);transform:scale(0);opacity:1;animation:rip .65s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* NAV: bilah kaca + "tetesan" penanda yang kenyal */
+nav.pill{
+  background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  -webkit-backdrop-filter:blur(22px) saturate(190%);backdrop-filter:blur(22px) saturate(190%);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -10px 18px rgba(110,160,255,.1),0 14px 44px rgba(0,0,0,.5);
+}
+nav.pill a{overflow:hidden;transition:color .25s,transform .4s cubic-bezier(.34,1.7,.5,1)}
+nav.pill a:active{transform:scale(.92)}
+#navInd{
+  border:1px solid rgba(255,255,255,.35);
+  background:radial-gradient(100% 120% at 20% 0%,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),linear-gradient(160deg,rgba(130,180,255,.55),rgba(47,107,255,.35));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -8px 14px rgba(20,60,200,.3),0 6px 20px var(--glow);
+  transition:transform .55s cubic-bezier(.34,1.45,.5,1),width .55s cubic-bezier(.34,1.45,.5,1);
+}
+
+/* tombol suara (pojok kanan bawah) */
+#sfx{position:fixed;z-index:60;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));width:50px;height:50px;min-height:0;padding:0;justify-content:center}
+#sfx svg{width:22px;height:22px}
+#sfx .off{display:none}
+#sfx[aria-pressed="false"] .on{display:none}
+#sfx[aria-pressed="false"] .off{display:block}
+
+/* toast kaca */
+#toast{position:fixed;left:50%;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 62px);z-index:70;max-width:calc(100vw - 32px);padding:12px 20px;border-radius:999px;text-align:center;font:600 .86rem/1.4 var(--sans);color:#fff;
+  background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 12px 34px rgba(0,0,0,.45);
+  opacity:0;transform:translate(-50%,16px) scale(.96);pointer-events:none;transition:opacity .3s,transform .45s cubic-bezier(.34,1.5,.5,1)}
+#toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+
+/* tombol di kartu proyek */
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+/* TECH STACK berlogo */
+.st-h{font:700 1rem var(--sans);margin:24px 0 12px;letter-spacing:.02em}
+.tech-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.tech-list li{
+  position:relative;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:16px;
+  font:600 .85rem var(--sans);color:var(--ink);
+  background:radial-gradient(120% 140% at 15% 0%,rgba(255,255,255,.2),rgba(255,255,255,0) 55%),linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -10px 16px rgba(110,160,255,.08),0 6px 18px rgba(0,0,0,.3);
+  transition:transform .4s cubic-bezier(.34,1.7,.5,1),border-color .3s}
+.tech-list li:hover{transform:translateY(-3px) scale(1.03);border-color:rgba(255,255,255,.4)}
+.tech-list svg{width:26px;height:26px;flex:none}
