@@ -1,5 +1,5 @@
 /* Portofolio Muhammad Rayyan Nafis – main.js
-   Bagian: bintang 3D · objek 3D · pindah halaman · tab · game */
+   Bagian: bintang 3D · objek 3D · pindah halaman · tab · game · suara tombol */
 (function () {
   'use strict';
   var root = document.documentElement;
@@ -394,6 +394,163 @@
     foto.addEventListener('error', pakaiFB);
     if (foto.complete && !foto.naturalWidth) pakaiFB();
   }
+
+  /* ============ TOMBOL: suara klik satisfying + riak liquid glass ============
+     Suara dibuat langsung dengan Web Audio (tanpa file mp3), jadi ringan. */
+  (function () {
+    var SEL = '.btn, .tab, nav.pill a';
+    var AC = null, out = null, noise = null, pressed = null, muted = false, toastT = 0;
+    var sfxBtn = document.getElementById('sfx');
+    var toastEl = document.getElementById('toast');
+    try { muted = localStorage.getItem('sfxMuted') === '1'; } catch (e) {}
+
+    function ctx() {
+      if (!AC) {
+        var C = window.AudioContext || window.webkitAudioContext;
+        if (!C) return null;
+        try { AC = new C(); } catch (e) { return null; }
+        var comp = AC.createDynamicsCompressor();
+        out = AC.createGain(); out.gain.value = .85;
+        out.connect(comp); comp.connect(AC.destination);
+        var len = Math.floor(AC.sampleRate * .06), buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
+        for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+        noise = buf;
+      }
+      if (AC.state === 'suspended') AC.resume();
+      return AC;
+    }
+    function tone(type, f0, f1, dur, vol, t0) {
+      var o = AC.createOscillator(), g = AC.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(f0, t0);
+      o.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+      g.gain.setValueAtTime(.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + .004);
+      g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+      o.connect(g); g.connect(out);
+      o.start(t0); o.stop(t0 + dur + .02);
+    }
+    function tick(freq, q, dur, vol, t0) {
+      var s = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+      s.buffer = noise; f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+      g.gain.setValueAtTime(vol, t0);
+      g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+      s.connect(f); f.connect(g); g.connect(out);
+      s.start(t0); s.stop(t0 + dur + .01);
+    }
+    var PITCH = { btn: 1, solid: .82, tab: 1.25, nav: 1.12, icon: 1.4 };
+    function kindOf(el) {
+      if (el.id === 'sfx') return 'icon';
+      if (el.classList.contains('tab')) return 'tab';
+      if (el.classList.contains('solid')) return 'solid';
+      if (el.closest('nav.pill')) return 'nav';
+      return 'btn';
+    }
+    // saat ditekan: "thok" bulat + kilau kaca + klik tajam
+    function down(kind) {
+      if (muted || !ctx()) return;
+      var t = AC.currentTime + .001, p = (PITCH[kind] || 1) * (.96 + Math.random() * .08);
+      tone('sine', 560 * p, 140 * p, .11, .5, t);
+      tone('triangle', 1250 * p, 620 * p, .05, .16, t);
+      tick(3400 * p, 1.2, .022, .5, t);
+    }
+    // saat dilepas: "plip" gelembung naik
+    function up(kind) {
+      if (muted || !ctx()) return;
+      var t = AC.currentTime + .001, p = (PITCH[kind] || 1) * (.97 + Math.random() * .06);
+      tone('sine', 700 * p, 1500 * p, .07, .2, t);
+      tick(6200 * p, 2, .014, .22, t);
+    }
+
+    function ripple(el, x, y) {
+      if (reduce) return;
+      var r = el.getBoundingClientRect(), size = Math.max(r.width, r.height) * 1.6, s = document.createElement('span');
+      s.className = 'rip';
+      s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (x - r.left - size / 2) + 'px;top:' + (y - r.top - size / 2) + 'px';
+      el.appendChild(s);
+      var rm = function () { if (s.parentNode) s.parentNode.removeChild(s); };
+      s.addEventListener('animationend', rm);
+      setTimeout(rm, 900);
+    }
+    function target(e) { var t = e.target; return t && t.closest ? t.closest(SEL) : null; }
+    function spasiLink(e, el) { return e.key === ' ' && el.tagName === 'A'; }
+
+    document.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      var el = target(e);
+      if (!el || el.disabled) return;
+      pressed = el;
+      ripple(el, e.clientX, e.clientY);
+      down(kindOf(el));
+    }, true);
+    document.addEventListener('pointerup', function () {
+      if (!pressed) return;
+      var el = pressed; pressed = null; up(kindOf(el));
+    }, true);
+    document.addEventListener('pointercancel', function () { pressed = null; }, true);
+
+    // keyboard (Enter / Spasi)
+    document.addEventListener('keydown', function (e) {
+      if (e.repeat || (e.key !== 'Enter' && e.key !== ' ')) return;
+      var el = target(e);
+      if (!el || el.disabled || spasiLink(e, el)) return;
+      var r = el.getBoundingClientRect();
+      ripple(el, r.left + r.width / 2, r.top + r.height / 2);
+      down(kindOf(el));
+    }, true);
+    document.addEventListener('keyup', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var el = target(e);
+      if (el && !el.disabled && !spasiLink(e, el)) up(kindOf(el));
+    }, true);
+
+    // iOS / Safari: audio baru aktif setelah ada sentuhan
+    ['touchend', 'click'].forEach(function (n) {
+      document.addEventListener(n, function () { if (!muted) ctx(); }, { capture: true, passive: true });
+    });
+
+    function toast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastT);
+      toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2800);
+    }
+
+    /* tombol suara nyala / mati */
+    function paintSfx() {
+      sfxBtn.setAttribute('aria-pressed', String(!muted));
+      sfxBtn.setAttribute('aria-label', 'Suara tombol: ' + (muted ? 'mati' : 'nyala'));
+    }
+    if (sfxBtn) {
+      paintSfx();
+      sfxBtn.addEventListener('click', function () {
+        muted = !muted;
+        try { localStorage.setItem('sfxMuted', muted ? '1' : '0'); } catch (e) {}
+        paintSfx();
+        toast(muted ? 'Suara tombol dimatikan' : 'Suara tombol dinyalakan');
+        if (!muted) down('icon');
+      });
+    }
+
+    /* tombol Preview & File GitHub: link diisi lewat data-preview / data-repo di index.html */
+    [].slice.call(document.querySelectorAll('.card[data-preview], .card[data-repo]')).forEach(function (card) {
+      [].slice.call(card.querySelectorAll('[data-act]')).forEach(function (a) {
+        var act = a.getAttribute('data-act');
+        var url = (card.getAttribute('data-' + act) || '').trim();
+        if (/^https?:\/\//i.test(url)) {
+          a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        } else {
+          a.href = '#';
+          a.classList.add('pending');
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            toast((act === 'preview' ? 'Link preview' : 'Link GitHub') + ' belum diisi. Isi data-' + act + ' di index.html.');
+          });
+        }
+      });
+    });
+  })();
 
   document.getElementById('thn').textContent = new Date().getFullYear();
 })();
