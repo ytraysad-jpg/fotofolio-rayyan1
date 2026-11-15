@@ -209,3 +209,5 @@ nav.pill a:active{transform:scale(.92)}
   transition:transform .4s cubic-bezier(.34,1.7,.5,1),border-color .3s}
 .tech-list li:hover{transform:translateY(-3px) scale(1.03);border-color:rgba(255,255,255,.4)}
 .tech-list svg{width:26px;height:26px;flex:none}
+
+.gh-row{margin:0 0 18px}
