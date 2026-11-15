@@ -6,7 +6,7 @@ Website portofolio statis (HTML + CSS + JavaScript murni, tanpa build).
 ```
 index.html      → isi halaman (Home, Tentang, Portofolio)
 css/style.css   → semua tampilan
-js/main.js      → bintang 3D, objek 3D, pindah halaman, tab, game
+js/main.js      → bintang 3D, objek 3D, pindah halaman, tab, game, suara tombol
 ```
 
 ## Ganti foto
@@ -29,3 +29,17 @@ Kalau foto gagal dimuat, otomatis tampil avatar "RN".
 1. Upload semua isi folder ini ke repo GitHub (`index.html`, `css/`, `js/`).
 2. Di Vercel: **Add New → Project → pilih repo** → Framework Preset: **Other** → **Deploy**.
    Tidak perlu build command dan output directory.
+
+## Isi link Preview & File GitHub
+Di `index.html`, tiap kartu proyek punya dua atribut kosong. Isi dengan link lengkap (`https://...`):
+```html
+<article class="card tilt" data-tilt="8" data-preview="https://nama-proyek.vercel.app" data-repo="https://github.com/username/nama-repo">
+```
+- `data-preview` → tombol **Preview** (website yang sudah live)
+- `data-repo` → tombol **File GitHub** (repo berisi file proyek)
+
+Kalau masih kosong, tombol menampilkan pesan "link belum diisi".
+
+## Tombol & suara
+- Semua tombol memakai gaya liquid glass (`.btn`, `.tab`, navigasi, tombol suara).
+- Suara klik dibuat dengan Web Audio (tanpa file audio). Tombol speaker di pojok kanan bawah untuk menyalakan/mematikan suara.
