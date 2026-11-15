@@ -561,6 +561,9 @@
         closeB = document.getElementById('aiClose'), sug = document.getElementById('aiSug');
     var hist = [], busy = false, greeted = false;
 
+    function bersih(t) {   // buang sisa markdown supaya tampil rapi
+      return String(t).replace(/\*\*|__/g, '').replace(/^\s*[*]\s+/gm, '- ').replace(/^#+\s*/gm, '');
+    }
     function add(role, text) {
       var d = document.createElement('div');
       d.className = 'm ' + (role === 'user' ? 'u' : 'b');
@@ -589,20 +592,22 @@
       inp.value = ''; sug.hidden = true;
       busy = true; send.disabled = true;
       var t = add('bot', 'Mengetik...'); t.classList.add('typing');
-      fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-10) }) })
+      var ctl = window.AbortController ? new AbortController() : null;
+      var to = setTimeout(function () { if (ctl) ctl.abort(); }, 30000);   // batas 30 detik
+      fetch('/api/chat', { method: 'POST', signal: ctl ? ctl.signal : undefined, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-10) }) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (x) {
           var rep = x.ok && x.j.reply;
           t.classList.remove('typing');
-          t.textContent = rep || x.j.error || 'AI sedang tidak bisa menjawab. Coba lagi nanti.';
+          t.textContent = rep ? bersih(rep) : x.j.error || 'AI sedang tidak bisa menjawab. Coba lagi nanti.';
           if (rep) hist.push({ role: 'assistant', content: rep }); else hist.pop();
         })
-        .catch(function () {
+        .catch(function (err) {
           t.classList.remove('typing');
-          t.textContent = 'Tidak bisa terhubung ke AI. Pastikan web dibuka dari alamat Vercel, bukan dari file.';
+          t.textContent = (err && err.name === 'AbortError') ? 'AI terlalu lama menjawab. Coba lagi.' : 'Tidak bisa terhubung ke AI. Pastikan web dibuka dari alamat Vercel, bukan dari file.';
           hist.pop();
         })
-        .then(function () { busy = false; send.disabled = false; log.scrollTop = log.scrollHeight; inp.focus(); });
+        .then(function () { clearTimeout(to); busy = false; send.disabled = false; log.scrollTop = log.scrollHeight; inp.focus(); });
     }
     fab.addEventListener('click', open);
     closeB.addEventListener('click', close);
