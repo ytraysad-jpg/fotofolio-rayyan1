@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Portofolio Muhammad Rayyan Nafis, pelajar PPLG/RPL SMK 1 Bangkinang.">
 <meta name="theme-color" content="#02030a">
+<!-- Ikon tab browser -->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<!-- Preview saat link dibagikan (WhatsApp, Telegram, Discord, dll.) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="Muhammad Rayyan Nafis – Portofolio">
+<meta property="og:description" content="Pelajar PPLG / RPL SMK 1 Bangkinang. Website, game, dan ide digital.">
+<meta property="og:image" content="https://fotofolio-rayyan1.vercel.app/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Muhammad Rayyan Nafis – Portofolio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Muhammad Rayyan Nafis – Portofolio">
+<meta name="twitter:description" content="Pelajar PPLG / RPL SMK 1 Bangkinang. Website, game, dan ide digital.">
+<meta name="twitter:image" content="https://fotofolio-rayyan1.vercel.app/img/og-image.png">
 <title>Muhammad Rayyan Nafis – Portofolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -120,6 +137,19 @@
 </main>
 
 <footer>© <span id="thn"></span> Muhammad Rayyan Nafis <a href="#home">Kembali ke Home ↑</a></footer>
+
+<button id="aiFab" class="btn solid" type="button" aria-expanded="false" aria-controls="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9z"/></svg>Tanya AI</button>
+<section id="ai" role="dialog" aria-label="Asisten AI portofolio" hidden>
+  <header class="ai-h"><b>Tanya AI Rayyan</b><button id="aiClose" class="btn sm" type="button" aria-label="Tutup chat AI"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></header>
+  <div id="aiLog" class="ai-log" role="log" aria-live="polite"></div>
+  <div id="aiSug" class="ai-sug">
+    <button class="btn sm" type="button" data-q="Proyek apa saja yang pernah dibuat Rayyan?">Proyek apa saja?</button>
+    <button class="btn sm" type="button" data-q="Apa saja skill dan teknologi yang dikuasai Rayyan?">Skill &amp; teknologi</button>
+    <button class="btn sm" type="button" data-q="Rayyan sekolah di mana dan jurusan apa?">Sekolah</button>
+  </div>
+  <form id="aiForm" class="ai-f" autocomplete="off"><input id="aiInput" type="text" maxlength="500" placeholder="Tulis pertanyaan..." aria-label="Pertanyaan untuk AI"><button id="aiSend" class="btn solid" type="submit">Kirim</button></form>
+  <p class="ai-n">Jawaban AI bisa keliru.</p>
+</section>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <button id="sfx" class="btn icon" type="button" aria-pressed="true" aria-label="Suara tombol: nyala">
