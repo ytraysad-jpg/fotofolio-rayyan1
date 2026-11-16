@@ -6,7 +6,7 @@ Website portofolio statis (HTML + CSS + JavaScript murni, tanpa build).
 ```
 index.html      → isi halaman (Home, Tentang, Portofolio)
 css/style.css   → semua tampilan
-js/main.js      → bintang 3D, objek 3D, pindah halaman, tab, game, suara tombol
+js/main.js      → bintang 3D, pindah halaman, tab, game, suara tombol
 ```
 
 ## Ganti foto

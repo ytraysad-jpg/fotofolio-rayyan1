@@ -1,5 +1,5 @@
 /* Portofolio Muhammad Rayyan Nafis – main.js
-   Bagian: bintang 3D · objek 3D · pindah halaman · tab · game · suara tombol */
+   Bagian: bintang 3D · pindah halaman · tab · game · suara tombol */
 (function () {
   'use strict';
   var root = document.documentElement;
@@ -90,111 +90,9 @@
     if (warp < .005) warp = 0;
   }
 
-  /* ============ OBJEK 3D (wireframe, 1 path per lapisan, tanpa shadowBlur) ============ */
-  var oc = document.getElementById('obj');
-  var ox2 = oc.getContext('2d');
-  var OW = 0, OH = 0, rx = .5, ry = 0, vrx = 0, vry = 0, drag = false, lx = 0, ly = 0, time = 0;
-  var objVisible = true;
-
-  var P = (1 + Math.sqrt(5)) / 2;
-  var ico = [[-1, P, 0], [1, P, 0], [-1, -P, 0], [1, -P, 0], [0, -1, P], [0, 1, P], [0, -1, -P], [0, 1, -P], [P, 0, -1], [P, 0, 1], [-P, 0, -1], [-P, 0, 1]]
-    .map(function (v) { var l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; });
-  var icoE = [];
-  for (var a = 0; a < 12; a++) for (var b = a + 1; b < 12; b++) {
-    if (Math.hypot(ico[a][0] - ico[b][0], ico[a][1] - ico[b][1], ico[a][2] - ico[b][2]) < 1.06) icoE.push([a, b]);
-  }
-  var oct = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]].map(function (v) { return [v[0] * .55, v[1] * .55, v[2] * .55]; });
-  var octE = [[0, 2], [0, 3], [0, 4], [0, 5], [1, 2], [1, 3], [1, 4], [1, 5], [2, 4], [2, 5], [3, 4], [3, 5]];
-  var RING = lite ? 28 : 40, ring = [];
-  for (var k = 0; k < RING; k++) { var t = k / RING * 6.283; ring.push([Math.cos(t) * 1.45, 0, Math.sin(t) * 1.45]); }
-  var orbs = [0, 2.094, 4.188];
-
-  function sizeObj() {
-    var r = oc.getBoundingClientRect();
-    if (!r.width) return;
-    var d = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.75);
-    OW = r.width; OH = r.height;
-    oc.width = OW * d; oc.height = OH * d;
-    ox2.setTransform(d, 0, 0, d, 0, 0);
-  }
-  sizeObj();
-  addEventListener('resize', sizeObj);
-
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { objVisible = es[0].isIntersecting; }).observe(oc);
-  }
-
-  function rot(v, ax, ay, az) {
-    var x = v[0], y = v[1], z = v[2], c = Math.cos(ax), s = Math.sin(ax), y1 = y * c - z * s, z1 = y * s + z * c;
-    c = Math.cos(ay); s = Math.sin(ay);
-    var x2 = x * c + z1 * s, z2 = -x * s + z1 * c;
-    c = Math.cos(az); s = Math.sin(az);
-    return [x2 * c - y1 * s, x2 * s + y1 * c, z2];
-  }
-  function proj(v, sc) { var z = v[2] + 3.2, k = 2.6 / z; return [OW / 2 + v[0] * sc * k, OH / 2 + v[1] * sc * k, z]; }
-
-  oc.addEventListener('pointerdown', function (e) { drag = true; lx = e.clientX; ly = e.clientY; try { oc.setPointerCapture(e.pointerId); } catch (x) {} oc.style.cursor = 'grabbing'; });
-  oc.addEventListener('pointermove', function (e) { if (!drag) return; vry += (e.clientX - lx) * .0016; vrx += (e.clientY - ly) * .0016; lx = e.clientX; ly = e.clientY; });
-  function release() { drag = false; oc.style.cursor = 'grab'; }
-  oc.addEventListener('pointerup', release);
-  oc.addEventListener('pointercancel', release);
-
-  // gambar semua garis lapisan belakang (redup) lalu depan (terang), masing-masing satu path
-  function edges(V, E, col, w) {
-    var mid = 3.2, pass, i, A, B;
-    for (pass = 0; pass < 2; pass++) {
-      ox2.globalAlpha = pass ? .95 : .3;
-      ox2.lineWidth = w;
-      ox2.strokeStyle = col;
-      ox2.beginPath();
-      for (i = 0; i < E.length; i++) {
-        A = V[E[i][0]]; B = V[E[i][1]];
-        if (((A[2] + B[2]) / 2 < mid) === !!pass) { ox2.moveTo(A[0], A[1]); ox2.lineTo(B[0], B[1]); }
-      }
-      ox2.stroke();
-    }
-  }
-
-  function drawObj(dt) {
-    if (!OW) return;
-    time += .01 * dt;
-    vry *= Math.pow(.94, dt); vrx *= Math.pow(.94, dt);
-    rx += (.0045 + vrx) * dt;
-    ry += (.0075 + vry + mouse.sx * .0012) * dt;
-    ox2.clearRect(0, 0, OW, OH);
-    ox2.lineCap = 'round';
-    var sc = OW * .3, i;
-
-    var V = ico.map(function (v) { return proj(rot(v, rx, ry, 0), sc); });
-    edges(V, icoE, '#7fb0ff', 1.4);
-
-    ox2.globalAlpha = .95; ox2.fillStyle = '#e6f0ff'; ox2.beginPath();
-    for (i = 0; i < V.length; i++) { ox2.moveTo(V[i][0] + 2.2, V[i][1]); ox2.arc(V[i][0], V[i][1], 2.2, 0, 6.283); }
-    ox2.fill();
-
-    var V2 = oct.map(function (v) { return proj(rot(v, -rx * 1.6, -ry * 1.4, time), sc); });
-    edges(V2, octE, '#3d77ff', 1.6);
-
-    var R = ring.map(function (v) { return proj(rot(v, rx * .5 + 1.1, ry * .6, time * .5), sc); });
-    ox2.globalAlpha = .4; ox2.lineWidth = 1; ox2.strokeStyle = '#7db4ff'; ox2.beginPath();
-    ox2.moveTo(R[0][0], R[0][1]);
-    for (i = 1; i < R.length; i++) ox2.lineTo(R[i][0], R[i][1]);
-    ox2.closePath(); ox2.stroke();
-
-    ox2.globalAlpha = 1; ox2.fillStyle = '#fff'; ox2.beginPath();
-    for (i = 0; i < orbs.length; i++) {
-      orbs[i] += (.012 + i * .004) * dt;
-      var p = proj(rot([Math.cos(orbs[i]) * 1.45, 0, Math.sin(orbs[i]) * 1.45], rx * .5 + 1.1, ry * .6, time * .5), sc);
-      ox2.moveTo(p[0] + 3.2, p[1]); ox2.arc(p[0], p[1], 3.2, 0, 6.283);
-    }
-    ox2.fill();
-    ox2.globalAlpha = 1;
-  }
-
   /* ============ LOOP (dibatasi fps, berhenti saat tab tidak aktif) ============ */
   var running = true, looping = false, last = 0, frameN = 0;
   var MIN_DT = lite ? 33 : 20;           // ~30fps (ringan) / ~50fps (normal)
-  var OBJ_EVERY = lite ? 2 : 1;           // objek 3D lebih jarang digambar di perangkat ringan
 
   function loop(ts) {
     if (!running || reduce) { looping = false; return; }
@@ -205,7 +103,6 @@
     var dt = Math.min(d, 50) / 16.7;
     frameN++;
     drawStars(dt);
-    if (cur === 'home' && objVisible && frameN % OBJ_EVERY === 0) drawObj(dt * OBJ_EVERY);
   }
   function startLoop() { if (looping || reduce) return; looping = true; requestAnimationFrame(loop); }
   document.addEventListener('visibilitychange', function () { running = !document.hidden; if (running) startLoop(); });
@@ -248,7 +145,7 @@
     scrollTo(0, 0);
     if (el.id === 'home') sizeObj();
     reveal(el);
-    if (reduce) { drawStars(1); if (el.id === 'home') drawObj(1); }
+    if (reduce) { drawStars(1); }
   }
   function go(id, push) {
     if (!pages[id]) id = 'home';
@@ -387,13 +284,14 @@
   mulai();
 
   /* ============ FOTO: kalau gagal dimuat, tampilkan avatar "RN" ============ */
-  var foto = document.getElementById('fotoProfil');
-  if (foto) {
+  ['fotoProfil', 'fotoHome'].forEach(function (id) {
+    var foto = document.getElementById(id);
+    if (!foto) return;
     var FB = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 453"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14224f"/><stop offset="1" stop-color="#0a1233"/></linearGradient></defs><rect width="340" height="453" fill="url(#g)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="120" fill="#4d8bff">RN</text></svg>');
     var pakaiFB = function () { if (foto.dataset.fb) return; foto.dataset.fb = '1'; foto.src = FB; };
     foto.addEventListener('error', pakaiFB);
     if (foto.complete && !foto.naturalWidth) pakaiFB();
-  }
+  });
 
   /* ============ TOMBOL: suara klik satisfying + riak liquid glass ============
      Suara dibuat langsung dengan Web Audio (tanpa file mp3), jadi ringan. */
