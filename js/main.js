@@ -143,7 +143,6 @@
     void el.offsetWidth;
     if (!reduce) el.classList.add('inn');
     scrollTo(0, 0);
-    if (el.id === 'home') sizeObj();
     reveal(el);
     if (reduce) { drawStars(1); }
   }
